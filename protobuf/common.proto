@@ -30,7 +30,8 @@ message TimerRequest {
     string Reply = 3;
     string Duration = 4;
     int64 Amount = 5;
-    google.protobuf.Timestamp Timestamp = 6;
+    google.protobuf.Struct Data = 6;
+    google.protobuf.Timestamp Timestamp = 7;
 }
 
 message TimerResponse {
@@ -42,6 +43,7 @@ message TimerResponse {
 
 message TimerFired {
     google.protobuf.Timestamp Timestamp = 1;
+    google.protobuf.Struct Data = 2;
 }
 
 message DescribeInventoryRequest {
@@ -54,11 +56,22 @@ message DescribeInventoryResponse {
     google.protobuf.Timestamp Timestamp = 2;
 }
 
+message RestoreRequest {
+    bytes Data = 1;
+}
+
+message RestoreResponse {
+    string Status = 1;
+    string Error = 2;
+}
+
 service Inventory {
     rpc Start (StartRequest) returns (StartResponse);
     rpc Describe (DescribeInventoryRequest) returns (DescribeInventoryResponse);
+    rpc Restore (RestoreRequest) returns (RestoreResponse);
 }
 
 service Timer {
     rpc CreateTimer (TimerRequest) returns (TimerResponse);
+    rpc Restore (RestoreRequest) returns (RestoreResponse);
 }

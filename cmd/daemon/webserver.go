@@ -9,6 +9,7 @@ import (
 	"github.com/alfreddobradi/game-vslice/common"
 	"github.com/alfreddobradi/game-vslice/gamecluster"
 	"github.com/alfreddobradi/game-vslice/protobuf"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"golang.org/x/exp/slog"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -28,7 +29,14 @@ func startServer(wg *sync.WaitGroup, addr string) {
 		auth := r.Header.Get("Authorization")
 
 		c := gamecluster.GetC()
-		inventory := protobuf.GetInventoryGrainClient(c, auth)
+
+		authUUID, err := uuid.Parse(auth)
+		if err != nil {
+			slog.Error("failed to parse authorization header", err, "auth", auth, "url", r.URL.String())
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+		inventory := protobuf.GetInventoryGrainClient(c, common.GetInventoryID(authUUID).String())
 
 		res, err := inventory.Describe(&protobuf.DescribeInventoryRequest{})
 		if err != nil {
@@ -70,7 +78,14 @@ func startServer(wg *sync.WaitGroup, addr string) {
 		}
 
 		c := gamecluster.GetC()
-		inventory := protobuf.GetInventoryGrainClient(c, auth)
+
+		authUUID, err := uuid.Parse(auth)
+		if err != nil {
+			slog.Error("failed to parse authorization header", err, "auth", auth, "url", r.URL.String())
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+		inventory := protobuf.GetInventoryGrainClient(c, common.GetInventoryID(authUUID).String())
 
 		res, err := inventory.Start(&protobuf.StartRequest{
 			Name:      string(b.Name),

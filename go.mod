@@ -4,8 +4,11 @@ go 1.18
 
 require (
 	github.com/asynkron/protoactor-go v0.0.0-20221002142108-880b460fcd1f
+	github.com/davecgh/go-spew v1.1.1
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
+	github.com/jmoiron/sqlx v1.3.5
+	github.com/lib/pq v1.2.0
 	github.com/nats-io/nats.go v1.22.0
 	golang.org/x/exp v0.0.0-20221217163422-3c43f8badb15
 	google.golang.org/protobuf v1.28.0

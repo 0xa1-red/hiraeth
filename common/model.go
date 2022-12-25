@@ -1,6 +1,8 @@
 package common
 
-import "time"
+import (
+	"encoding/gob"
+)
 
 type BuildingName string
 
@@ -9,10 +11,14 @@ const (
 )
 
 var Buildings map[BuildingName]Building = map[BuildingName]Building{
-	House: {Name: House, BuildTime: 10 * time.Second},
+	House: {Name: House, BuildTime: "10s"},
 }
 
 type Building struct {
 	Name      BuildingName
-	BuildTime time.Duration
+	BuildTime string
+}
+
+func init() {
+	gob.Register(Buildings)
 }
