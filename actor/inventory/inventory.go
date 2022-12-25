@@ -87,7 +87,7 @@ func (g *Grain) Start(req *protobuf.StartRequest, ctx cluster.GrainContext) (*pr
 	b, ok := common.Buildings[common.BuildingName(req.Name)]
 	if !ok {
 		return &protobuf.StartResponse{
-			Status:    "Error",
+			Status:    protobuf.Status_Error,
 			Error:     fmt.Sprintf("Invalid building name: %s", req.Name),
 			Timestamp: timestamppb.Now(),
 		}, nil
@@ -95,7 +95,7 @@ func (g *Grain) Start(req *protobuf.StartRequest, ctx cluster.GrainContext) (*pr
 
 	if g.buildings[b].Queue > 0 {
 		return &protobuf.StartResponse{
-			Status:    "Error",
+			Status:    protobuf.Status_Error,
 			Error:     fmt.Sprintf("Building is already in progress: %s", req.Name),
 			Timestamp: timestamppb.Now(),
 		}, nil
@@ -126,7 +126,7 @@ func (g *Grain) Start(req *protobuf.StartRequest, ctx cluster.GrainContext) (*pr
 	g.buildings[b].Finished = start
 
 	return &protobuf.StartResponse{
-		Status:    "OK",
+		Status:    protobuf.Status_OK,
 		Timestamp: timestamppb.Now(),
 	}, nil
 }

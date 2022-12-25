@@ -92,7 +92,7 @@ func (p *Persister) restore(item Snapshot) error {
 	}
 
 	res, _ := client.Restore(&protobuf.RestoreRequest{Data: item.Data})
-	if res.Status == "Error" {
+	if res.Status == protobuf.Status_Error {
 		return fmt.Errorf("%s", res.Error)
 	}
 

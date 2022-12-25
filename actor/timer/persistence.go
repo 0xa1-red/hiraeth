@@ -58,7 +58,7 @@ func (g *Grain) Identity() string {
 func (g *Grain) Restore(req *protobuf.RestoreRequest, ctx cluster.GrainContext) (*protobuf.RestoreResponse, error) {
 	if err := g.Decode(req.Data); err != nil {
 		return &protobuf.RestoreResponse{
-			Status: "Error",
+			Status: protobuf.Status_Error,
 			Error:  err.Error(),
 		}, nil
 	}
@@ -66,7 +66,7 @@ func (g *Grain) Restore(req *protobuf.RestoreRequest, ctx cluster.GrainContext) 
 	g.startTimer()
 
 	return &protobuf.RestoreResponse{
-		Status: "OK",
+		Status: protobuf.Status_OK,
 	}, nil
 }
 

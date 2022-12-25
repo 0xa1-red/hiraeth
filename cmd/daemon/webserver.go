@@ -103,7 +103,7 @@ func startServer(wg *sync.WaitGroup, addr string) {
 			return
 		}
 
-		if res.Status == "Error" {
+		if res.Status == protobuf.Status_Error {
 			slog.Error("failed to start building", fmt.Errorf("%s", res.Error),
 				"auth", auth,
 				"url", r.URL.String(),

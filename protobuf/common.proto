@@ -6,6 +6,12 @@ import "google/protobuf/struct.proto";
 
 message Empty {}
 
+enum Status {
+    Unknown = 0;
+    OK = 1;
+    Error = 2;
+}
+
 message StartRequest {
     string Name = 1;
     int64 Amount = 2;
@@ -13,13 +19,13 @@ message StartRequest {
 }
 
 message StartResponse {
-    string Status = 1;
+    Status Status = 1;
     string Error = 2;
     google.protobuf.Timestamp Timestamp = 3;
 }
 
 message FinishResponse {
-    string Status = 1;
+    Status Status = 1;
     string Error = 2;
     google.protobuf.Timestamp Timestamp = 3;
 }
@@ -35,7 +41,7 @@ message TimerRequest {
 }
 
 message TimerResponse {
-    string Status = 1;
+    Status Status = 1;
     string Error = 2;
     google.protobuf.Timestamp Deadline = 3;
     google.protobuf.Timestamp Timestamp = 4;
@@ -61,7 +67,7 @@ message RestoreRequest {
 }
 
 message RestoreResponse {
-    string Status = 1;
+    Status Status = 1;
     string Error = 2;
 }
 

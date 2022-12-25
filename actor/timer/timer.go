@@ -44,7 +44,7 @@ func (g *Grain) CreateTimer(req *protobuf.TimerRequest, ctx cluster.GrainContext
 	d, err := time.ParseDuration(req.Duration)
 	if err != nil {
 		return &protobuf.TimerResponse{
-			Status:    "Error",
+			Status:    protobuf.Status_Error,
 			Error:     err.Error(),
 			Timestamp: timestamppb.New(start),
 		}, nil
@@ -67,7 +67,7 @@ func (g *Grain) CreateTimer(req *protobuf.TimerRequest, ctx cluster.GrainContext
 	}
 
 	return &protobuf.TimerResponse{
-		Status:    "OK",
+		Status:    protobuf.Status_OK,
 		Deadline:  timestamppb.New(deadline),
 		Timestamp: timestamppb.Now(),
 	}, nil
