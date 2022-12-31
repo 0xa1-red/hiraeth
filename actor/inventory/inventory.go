@@ -38,18 +38,6 @@ func (g *Grain) Init(ctx cluster.GrainContext) {
 	label := fmt.Sprintf("%s-subject", ctx.Identity())
 	g.replySubject = uuid.NewSHA1(uuid.NameSpaceOID, []byte(label)).String()
 
-	buildings := make(map[common.Building]*BuildingRegister)
-
-	for _, building := range common.Buildings {
-		buildings[building] = &BuildingRegister{
-			mx:     &sync.Mutex{},
-			Amount: 0,
-			Queue:  0,
-		}
-	}
-
-	g.buildings = buildings
-
 	cb := func(t *protobuf.TimerFired) {
 		payload := t.Data.AsMap()
 		buildingName := payload["building"].(string)
@@ -72,13 +60,17 @@ func (g *Grain) Init(ctx cluster.GrainContext) {
 	g.subscription = sub
 }
 func (g *Grain) Terminate(ctx cluster.GrainContext) {
+	defer g.subscription.Unsubscribe()
+	if len(g.buildings) == 0 {
+		return
+	}
+
 	if n, err := persistence.Get().Persist(g); err != nil {
 		slog.Error("failed to persist grain", err, "kind", g.Kind(), "identity", ctx.Identity())
 	} else {
 		slog.Debug("grain successfully persisted", "kind", g.Kind(), "identity", ctx.Identity(), "written", n)
 	}
 
-	g.subscription.Unsubscribe()
 }
 
 func (g *Grain) ReceiveDefault(ctx cluster.GrainContext) {}
